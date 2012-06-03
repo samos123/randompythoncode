@@ -22,7 +22,10 @@ class Horse(object):
         self.graph = {'horse' : 0}
                 
     def possible_moves(self, position_x=None, position_y=None):
-        # The 8 different steps you can take from a fixed position
+        """
+        Returns the 8 different steps you can take from a fixed position
+        Returns for example [{'x': 1, 'y': 3},,,etc]
+        """
         possible_steps = [(1, 2),(2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1), (-2, 1), (-1, 2) ]
         moves = []
         for step in possible_steps:
@@ -37,7 +40,7 @@ class Horse(object):
 
     def create_smarter_graph(self):
         """
-        Create a graph based on the amount of rows and columns based on fields
+        Create a graph based on the amount of rows and columns
         """
         self.graph = {}
         
@@ -48,20 +51,12 @@ class Horse(object):
                 # Get the possible moves for the current position in the field
                 possibile_position_ids = []
                 for possible_position in self.possible_moves(x,y):
-                    if possible_position['x'] == self.current_pos['x'] and possible_position['y'] == self.current_pos['x']:
-                        possibile_position_id = 'horse'
-                    else:
-                        possibile_position_id = 'x{x}_y{y}'.format(x=possible_position['x'], 
+                    possibile_position_id = 'x{x}_y{y}'.format(x=possible_position['x'], 
                                                                y=possible_position['y'])
                     possibile_position_ids.append(possibile_position_id)
                 
                 # Add current field position with the neighbors to the graph
-                if self.current_pos['x'] == x and self.current_pos['y'] == y:
-                    # If the current field equals the current pos of the horse we should name it horse
-                    # this is used later to find the shortest path to horse from any position
-                    current_position_id = 'horse'
-                else:
-                    current_position_id = 'x{x}_y{y}'.format(x=x, y=y)
+                current_position_id = 'x{x}_y{y}'.format(x=x, y=y)
                     
                 self.graph[current_position_id] = possibile_position_ids
         
@@ -71,7 +66,9 @@ class Horse(object):
         if x == None or y == None:
             x = self.n
             y = self.n
-        return bfs.shortest_path(self.graph, 'horse', 'x{x}_y{y}'.format(x=x, y=y))
+        
+        horse_position = 'x{x}_y{y}'.format(x=self.current_pos['x'], y=self.current_pos['y'])
+        return bfs.shortest_path(self.graph, horse_position, 'x{x}_y{y}'.format(x=x, y=y))
 
     def shortest_path_stupid(self, x=None, y=None):
         if x == None or y == None:
