@@ -1,0 +1,28 @@
+=====
+HORSE
+=====
+
+There are 3 main functions:
+
+1. Create a graph
+2. Get the possible moves of a position
+3. Get the shortest path based on the graph (Using BFS or Dijkstra)
+
+
+The graph is created by adding all the possible moves with edges to the previous move.
+All moves have a cost of 1, so the path with lowest costs is the path with least moves.
+
+Currently it creates for every position 8 points in the graph untill it did this for 
+all positions on the field. Causing it to be terribly slow for fields bigger than 12.
+
+The first time I made it terribly inefficient to create the graph second time
+I used a more straight forward approach by creating it based on the field so 
+no need for recursion.
+
+The stupid inefficient version is found in Horse.create_stupid_graph and Horse.shortest_path_stupid
+the better effeicient version is found in Horse.create_smarter_graph and Horse.shortest_path_bfs.
+
+It's better to use BFS as all edges are the same weight: 1, so no need for Dijkstra.
+
+The smarter graph function loops through every position and then loops through the possible
+moves and adds them to the graph. This way it only takes n*n * possible moves.
