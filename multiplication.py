@@ -38,8 +38,8 @@ def mult(x, y):
     str_y = prepend_zeros(str_y, n)
     n_2 = n / 2
 
-    a, b = int(str_x[:n_2] or 0), int(str_x[n_2:] or 0)
-    c, d = int(str_y[:n_2] or 0), int(str_y[n_2:] or 0)
+    a, b = int(str_x[:n_2]), int(str_x[n_2:])
+    c, d = int(str_y[:n_2]), int(str_y[n_2:])
 
     ac = mult(a, c)
     ad_bc = mult(a, d) + mult(b, c)
