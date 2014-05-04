@@ -17,45 +17,37 @@ memory = [[0,0,0,0,0,0,0,0,0,0],
           [0,10,20,30,40,50,60,70,80,90]]
 
 
+def prepend_zeros(str_x, n):
+    diff = n - len(str_x)
+    str_x = "0" * diff + str_x
+    return str_x
+
 
 def mult(x, y):
     """ Recursive multiplication using
     x = 10^n/2 * a + b
     y = 10^n/2 * c + d
     x * y = 10^n * ac + 10^(n/2) (ad+bc) + bd
-
-    Currently doesn't work for x=5432 y=12
     """
     str_x, str_y = str(x), str(y)
     n = max(len(str_x), len(str_y))
     if n <= 1:
         return memory[x][y]
 
+    str_x = prepend_zeros(str_x, n)
+    str_y = prepend_zeros(str_y, n)
     n_2 = n / 2
 
-    if len(str_x) == 1:
-        a, b = 0, x
-    else:
-        str_x_2 = len(str_x) / 2
-        a, b = int(str_x[:str_x_2] or 0), int(str_x[str_x_2:] or 0)
-
-
-    if len(str_y) == 1:
-        c, d = 0, y
-    else:
-        str_y_2 = len(str_y) / 2
-        c, d = int(str_y[:str_y_2] or 0), int(str_y[str_y_2:] or 0)
-
-
-    print "a: %s, b: %s, c: %s, d: %s" % (a, b, c, d)
+    a, b = int(str_x[:n_2] or 0), int(str_x[n_2:] or 0)
+    c, d = int(str_y[:n_2] or 0), int(str_y[n_2:] or 0)
 
     ac = mult(a, c)
     ad_bc = mult(a, d) + mult(b, c)
     bd = mult(b, d)
 
+    print "a: %s, b: %s, c: %s, d: %s" % (a, b, c, d)
     print "ac: %s, ad + bc: %s, bd: %s" %(ac, ad_bc, bd)
     print "n: %s, n/2: %s" % (n, n_2)
-
 
     # for supporting edge case where n is not a multiple of 2
     n_2 = int(ceil(n / 2.0))
@@ -95,9 +87,9 @@ class MultiplicationTestCase(unittest.TestCase):
                          25000000000000)
 
     def test_random_cases(self):
-        for i in range(100):
-            x = randint(1,10000)
-            y = randint(1,10000)
+        for i in range(1000):
+            x = randint(1,100000)
+            y = randint(1,100000)
             expected = x * y
             result = self.func(x, y)
             self.assertEqual(self.func(x, y), expected,
