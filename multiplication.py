@@ -55,6 +55,39 @@ def mult(x, y):
     return (10**(n) * ac)  + (10**n_2 * ad_bc) + bd
 
 
+def karatsuba(x, y):
+    """ Recursive multiplication using karatsuba
+    x = 10^n/2 * a + b
+    y = 10^n/2 * c + d
+    x * y = 10^n * ac + 10^(n/2) (ad+bc) + bd
+    where (ad+bc) = (a+b)(c+d) - ac - bd
+    """
+    str_x, str_y = str(x), str(y)
+    n = max(len(str_x), len(str_y))
+    if n <= 1:
+        return memory[x][y]
+
+    str_x = prepend_zeros(str_x, n)
+    str_y = prepend_zeros(str_y, n)
+    n_2 = n / 2
+
+    a, b = int(str_x[:n_2] or 0), int(str_x[n_2:] or 0)
+    c, d = int(str_y[:n_2] or 0), int(str_y[n_2:] or 0)
+
+    ac = karatsuba(a, c)
+    bd = karatsuba(b, d)
+    ad_bc = karatsuba((a + b), (c + d)) - ac - bd
+
+    print "a: %s, b: %s, c: %s, d: %s" % (a, b, c, d)
+    print "ac: %s, ad + bc: %s, bd: %s" %(ac, ad_bc, bd)
+    print "n: %s, n/2: %s" % (n, n_2)
+
+    # for supporting edge case where n is not a multiple of 2
+    n_2 = int(ceil(n / 2.0))
+    n = n if n % 2 == 0 else n + 1
+    return (10**(n) * ac)  + (10**n_2 * ad_bc) + bd
+
+
 class MultiplicationTestCase(unittest.TestCase):
     __test__ = False # Tell nosetests not to run this test case by itself
 
@@ -102,4 +135,9 @@ class RecursiveMultiplicationTestCase(MultiplicationTestCase):
     __test__ = True
     def setUp(self):
         self.func = mult
+
+class KaratsubaTestCase(MultiplicationTestCase):
+    __test__ = True
+    def setUp(self):
+        self.func = karatsuba
 
